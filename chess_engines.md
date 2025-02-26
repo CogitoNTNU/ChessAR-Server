@@ -15,7 +15,12 @@
 
 Dette er sjakkcomputerne som er best nå.
 
+## Hvordan kommunisere med computerene
+- Bruke uci
+- https://www.stmintz.com/ccc/index.php?id=141612 
+
+
 
 Mulighet med OpenGL eller å lage noe selv.
-3D projection skal vi lage
+3D projection skal vi lage (eller bare opencv)
 
