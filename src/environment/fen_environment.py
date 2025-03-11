@@ -26,8 +26,10 @@ class FenEnvironment(Environment):
         Returns:
             Any: The environment state
         """
-        print(repr_state)
-        return chess.Board().set_fen(fen) is None
+        try:
+            return chess.Board().set_fen(repr_state) is None
+        except:
+            return False
         
 
     def is_valid(self, state: fen) -> bool:
