@@ -7,6 +7,7 @@ from environment.environment import Environment
 from model.model import Model
 from viewport.viewport import ViewPort
 from time import sleep
+from model.stockfish_model import StockfishModel
 
 
 class Server:
@@ -35,9 +36,12 @@ class Server:
 
 
 def main() -> None:
-    server: Server = Server()
+    #server: Server = Server()
     print("Starting server...")
-    server.run()
+    #server.run()
+    fen = "r1bqkbnr/1ppp2P1/p1n2p1p/4p3/4P3/5P2/PPPP2P1/RNBQKBNR w KQkq - 0 7"
+    s = StockfishModel(100)
+    print(s.get_best_move(fen)) # best move can also include 5 charachters if promotion
 
 
 if __name__ == "__main__":
