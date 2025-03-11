@@ -7,6 +7,8 @@ from environment.environment import Environment
 from model.model import Model
 from viewport.viewport import ViewPort
 from time import sleep
+import time
+import stockfish
 
 from model.komodo_model import KomodoModel
 from model.leela_model import LeelaModel
@@ -40,17 +42,32 @@ class Server:
 
 def main() -> None:
     # server: Server = Server()
-    #server: Server = Server()
-    print("Starting server...")
     # server.run()
-    l = LeelaModel(10000)
-    fen = "rnbqkb1r/ppp1pp1p/3p1n2/6p1/3PP3/5P2/PPP3PP/RNBQKBNR w KQkq - 0 4"
-    print(l.get_best_move(fen))
-
-    #server.run()
     fen = "r1bqkbnr/1ppp2P1/p1n2p1p/4p3/4P3/5P2/PPPP2P1/RNBQKBNR w KQkq - 0 7"
-    s = StockfishModel(100)
+
+    start = time.time()
+    k = KomodoModel(100)
+    print(k.get_best_move(fen))
+    print(time.time()-start)
+
+
+    start = time.time()
+    l = LeelaModel(100)
+    print(l.get_best_move(fen))
+    print(time.time()-start)
+
+
+    start = time.time()
+    s = StockfishModel(20)
     print(s.get_best_move(fen)) # best move can also include 5 charachters if promotion
+    print(time.time()-start)
+    
+    start = time.time()
+    stock = stockfish.Stockfish("../Chess_engines/stockfish/stockfish-macos-m1-apple-silicon")
+    stock.set_depth(10)
+    stock.set_fen_position(fen)
+    print(stock.get_best_move())
+    print(time.time()-start)
 
 
 if __name__ == "__main__":
