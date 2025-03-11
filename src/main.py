@@ -39,9 +39,18 @@ class Server:
 
 
 def main() -> None:
-    server: Server = Server()
+    # server: Server = Server()
+    #server: Server = Server()
     print("Starting server...")
-    server.run()
+    # server.run()
+    l = LeelaModel(10000)
+    fen = "rnbqkb1r/ppp1pp1p/3p1n2/6p1/3PP3/5P2/PPP3PP/RNBQKBNR w KQkq - 0 4"
+    print(l.get_best_move(fen))
+
+    #server.run()
+    fen = "r1bqkbnr/1ppp2P1/p1n2p1p/4p3/4P3/5P2/PPPP2P1/RNBQKBNR w KQkq - 0 7"
+    s = StockfishModel(100)
+    print(s.get_best_move(fen)) # best move can also include 5 charachters if promotion
 
 
 if __name__ == "__main__":
