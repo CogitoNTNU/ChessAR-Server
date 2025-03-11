@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Any
 
 """
 This implements a standard environment interface to be used as a base for all game environments.
@@ -20,21 +20,21 @@ class Environment(ABC):
     """
 
     @abstractmethod
-    def to_env(self, repr_state) -> List[List[object]]:
+    def to_env(self, repr_state: Any) -> Any:
         """
         Takes a state and returns the state as a list of lists.
         """
         pass
 
     @abstractmethod
-    def is_valid(self, state: List[List[object]]) -> bool:
+    def is_valid(self, state: Any) -> bool:
         """
         Takes a state and checks if the state is valid for the environment.
         """
         pass
 
     @abstractmethod
-    def to_fen(self, state: List[List[object]]) -> str:
+    def to_fen(self, state: Any) -> str:
         """
         Returns the current state of the game as a fen string.
         """
