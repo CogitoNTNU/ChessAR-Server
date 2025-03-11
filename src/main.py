@@ -8,6 +8,9 @@ from model.model import Model
 from viewport.viewport import ViewPort
 from time import sleep
 
+from model.komodo_model import KomodoModel
+from model.leela_model import LeelaModel
+
 
 class Server:
     def __init__(
@@ -35,9 +38,13 @@ class Server:
 
 
 def main() -> None:
-    server: Server = Server()
+    # server: Server = Server()
     print("Starting server...")
-    server.run()
+    # server.run()
+    l = LeelaModel(10000)
+    fen = "rnbqkb1r/ppp1pp1p/3p1n2/6p1/3PP3/5P2/PPP3PP/RNBQKBNR w KQkq - 0 4"
+    print(l.get_best_move(fen))
+
 
 
 if __name__ == "__main__":
