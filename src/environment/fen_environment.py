@@ -26,9 +26,13 @@ class FenEnvironment(Environment):
         Returns:
             Any: The environment state
         """
+
+        if len(repr_state.split()) != 6:
+            return False
         try:
-            return chess.Board().set_fen(repr_state) is None
+            return chess.Board().set_fen(repr_state)
         except:
+            print("Invalid FEN string")
             return False
         
 
@@ -43,11 +47,8 @@ class FenEnvironment(Environment):
             bool: True if the state is a valid chessboard state, False otherwise
         """
 
-        valid = self.to_env(state)
-        if valid == None:
-            return True
-        else:
-            return False
+        return self.to_env(state) == None
+        
 
     @override
     def to_fen(self, state: fen) -> fen:
