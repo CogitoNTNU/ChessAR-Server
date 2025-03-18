@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Any
 
 """
 This interface is responsible for defining the chess model at use to get the best possible moves.
@@ -18,7 +18,7 @@ class Model(ABC):
     """
 
     @abstractmethod
-    def get_best_move(self, state: str) -> object:
+    def get_best_move(self, state: Any) -> Any:
         """
         Returns the best possible move from the current state of the chess board.
         """
