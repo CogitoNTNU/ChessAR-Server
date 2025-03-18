@@ -8,9 +8,9 @@ class KomodoModel(Model):
         self.movetime = movetime
 
     def get_best_move(self, fen: str) -> str:
-        # Start LCZero as a subprocess
+        # Start Komodo Dragon as a subprocess
         dragon = subprocess.Popen(
-            ["/Users/hakonstoren/Python_i_VSCODE/Cogito/ChessAR/dragon_05e2a7/OSX/dragon-osx"],
+            ["../Chess_engines/dragon_05e2a7/OSX/dragon-osx"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             text=True
