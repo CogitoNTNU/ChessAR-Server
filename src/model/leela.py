@@ -10,7 +10,7 @@ class Leela(Model):
     def get_best_move(self, fen: str) -> str:
         # Start LCZero as a subprocess
         leela = subprocess.Popen(
-            ["lc0"],
+            ["src/model/engines/lc0/0.31.2/libexec/lc0"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             text=True

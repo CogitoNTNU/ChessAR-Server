@@ -1,0 +1,52 @@
+{
+  "homebrew_version": "4.4.1-64-gd0ab3d3",
+  "used_options": [
+
+  ],
+  "unused_options": [
+
+  ],
+  "built_as_bottle": true,
+  "poured_from_bottle": true,
+  "loaded_from_api": true,
+  "installed_as_dependency": false,
+  "installed_on_request": true,
+  "changed_files": [
+    "bin/lc0"
+  ],
+  "time": 1741443594,
+  "source_modified_time": 1729456563,
+  "compiler": "clang",
+  "aliases": [
+
+  ],
+  "runtime_dependencies": [
+    {
+      "full_name": "eigen",
+      "version": "3.4.0",
+      "revision": 1,
+      "pkg_version": "3.4.0_1",
+      "declared_directly": true
+    }
+  ],
+  "source": {
+    "spec": "stable",
+    "versions": {
+      "stable": "0.31.2",
+      "head": null,
+      "version_scheme": 0
+    },
+    "path": "/Users/hakonstoren/Library/Caches/Homebrew/api/formula.jws.json",
+    "tap_git_head": null,
+    "tap": "homebrew/core"
+  },
+  "arch": "arm64",
+  "built_on": {
+    "os": "Macintosh",
+    "os_version": "macOS 15",
+    "cpu_family": "dunno",
+    "xcode": "16.0",
+    "clt": "16.0.0.0.1.1724870825",
+    "preferred_perl": "5.34"
+  }
+}
