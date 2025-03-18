@@ -1,5 +1,6 @@
 from typing_extensions import override
 from typing import Any
+import chess
 
 from src.environment.environment import Environment
 
@@ -25,7 +26,15 @@ class FenEnvironment(Environment):
         Returns:
             Any: The environment state
         """
-        raise NotImplementedError
+
+        if len(repr_state.split()) != 6:
+            return False
+        try:
+            return chess.Board().set_fen(repr_state)
+        except:
+            print("Invalid FEN string")
+            return False
+        
 
     def is_valid(self, state: fen) -> bool:
         """
@@ -37,7 +46,9 @@ class FenEnvironment(Environment):
         Returns:
             bool: True if the state is a valid chessboard state, False otherwise
         """
-        raise NotImplementedError
+
+        return self.to_env(state) == None
+        
 
     @override
     def to_fen(self, state: fen) -> fen:
