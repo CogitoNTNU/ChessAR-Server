@@ -1,17 +1,16 @@
-from typing import Any
-from model.model import Model
-
+from src.model.model import Model
+from typing import List
+import requests
 
 class Stockfish(Model):
-    """
-    This implements the Stockfish chess model to get the best possible moves.
-    """
+    def __init__(self, depth: int = 20):
+        super().__init__()
+        self.url = "https://chess-api.com/v1"
+        self.depth = depth
 
-    def __init__(self) -> None:
-        pass
-
-    def get_best_move(self, state: Any) -> Any:
-        """
-        Returns the best possible move from the current state of the chess board.
-        """
-        pass
+    def get_best_move(self, fen: str) -> List[str]:
+        headers = {"fen": fen,
+                "depth": self.depth
+            }
+        ans = requests.post(self.url, json=headers)
+        return ans.json()["move"]
