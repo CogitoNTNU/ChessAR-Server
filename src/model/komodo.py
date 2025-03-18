@@ -10,7 +10,7 @@ class Komodo(Model):
     def get_best_move(self, fen: str) -> str:
         # Start Komodo Dragon as a subprocess
         dragon = subprocess.Popen(
-            ["../../Chess_engines/dragon_05e2a7/OSX/dragon-osx"],
+            ["src/model/engines/dragon_05e2a7/OSX/dragon-osx"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             text=True
