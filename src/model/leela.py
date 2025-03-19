@@ -2,18 +2,19 @@ import subprocess
 from typing import List
 from src.model.model import Model
 
+
 class Leela(Model):
     def __init__(self, movetime: int = 1000):
         super().__init__()
         self.movetime = movetime
 
-    def get_best_move(self, fen: str) -> str:
+    def get_best_move(self, state: str) -> str:
         # Start LCZero as a subprocess
         leela = subprocess.Popen(
             ["src/model/engines/lc0/0.31.2/libexec/lc0"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            text=True
+            text=True,
         )
 
         # Send UCI initialization commands
@@ -22,7 +23,7 @@ class Leela(Model):
         leela.stdin.flush()
 
         # Send FEN position
-        leela.stdin.write(f"position fen {fen}\n")
+        leela.stdin.write(f"position fen {state}\n")
         leela.stdin.write(f"go movetime {self.movetime}\n")  # 1 second thinking time
         leela.stdin.flush()
 
