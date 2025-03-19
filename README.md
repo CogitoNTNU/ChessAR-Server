@@ -88,7 +88,7 @@ This repository is only a part of the solution. This is the backend that is goin
     </td>
     <td align="center">
       <a href="#">
-        <im src="https://avatars.githubusercontent.com/u/105772595?v=4" width="100px;" alt="Vetle Støren"/><br>
+        <img src="https://avatars.githubusercontent.com/u/105772595?v=4" width="100px;" alt="Vetle Støren"/><br>
         <sub>
           <b>Vetle Støren - Member</b>
         </sub>
