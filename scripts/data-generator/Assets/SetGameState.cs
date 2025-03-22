@@ -1,17 +1,80 @@
+using System;
+using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
+using UnityEditor.Experimental.GraphView;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SetGameState : MonoBehaviour
 {
+    private Dictionary<char, string> fenPieceMap = new Dictionary<char, string>()
+        {
+            { 'r', "Rock  Black" },
+            { 'n', "Knight  Black" },
+            { 'b', "Bishop  Black" },
+            { 'q', "Queen  Black" },
+            { 'k', "King  Black" },
+            { 'p', "Pawn Black" },
+            { 'R', "Rock White" },
+            { 'N', "Knight White" },
+            { 'B', "Bishop White" },
+            { 'Q', "Queen White" },
+            { 'K', "King White" },
+            { 'P', "Pawn White" }
+        };
+    public string fen = "rnbqkb1r/pp1p1ppp/4p2n/2p5/8/2N1P2N/PPPP1PPP/R1BQKB1R";
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        setBoardState();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void setBoardState() {
+        int x = 0;
+        foreach (char chr in fen) {
+            if (chr == '/') {continue;}
+            if (Char.IsDigit(chr))
+            {                
+                x += chr - 48;
+            }
+            else {
+                Debug.Log(":)    " + chr );
+                place(fenPieceMap[chr], x);
+                x += 1;  
+            }
+        }
+    }
+
+    void place(string piece, int idx) {
+        Debug.Log(idx);
+        float col_zero = -(5.6f-0.8f)/2f; // The x position of a1
+        float row_zero = (5.6f-0.8f)/2f; // The y position of a1
+        float square_size = 0.6f; // (5.6 - 2*0.4)/ 8
+
+        float col = col_zero + idx % 8 * square_size;
+        float row = row_zero - idx / 8 * square_size;
+
+        Vector3 position = new Vector3(row, 0, col);
+        Quaternion rotation = Quaternion.Euler(-90, 0, 0); 
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/" + piece);
+
+        if (prefab == null)
+        {
+            Debug.LogError("Could not find prefab at Resources/Prefabs/" + piece);
+            return;
+        }
+
+        GameObject clone = Instantiate(prefab, position, rotation);
+        clone.transform.localScale = new Vector3(1000, 1000, 1000);
+        
+        // Modify the clone to your heart's content
     }
 
 
