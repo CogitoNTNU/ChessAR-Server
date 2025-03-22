@@ -1,10 +1,13 @@
 using System;
 using System.IO;
+using Microsoft.Unity.VisualStudio.Editor;
 using Unity.Collections;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
 public class SetCameraPosition : MonoBehaviour
 {
+    public int upscale = 2;
     public float min_rho = 5;
     public float max_rho = 7;
     public float min_theta = -Convert.ToSingle(Math.PI)/4;
@@ -58,8 +61,9 @@ public class SetCameraPosition : MonoBehaviour
             System.IO.Directory.CreateDirectory(screenshotFolderPath);
         
         var screenshotName = "Chess_Image_" + System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
-        ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(screenshotFolderPath, screenshotName), 10);
+        ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(screenshotFolderPath, screenshotName), upscale);
         Debug.Log(System.IO.Path.Combine(screenshotFolderPath,screenshotName));
+
 
         SaveLabels();
     }
@@ -76,10 +80,11 @@ public class SetCameraPosition : MonoBehaviour
         Bounds bounds = boardRenderer.bounds;
         // Define the four corners in world space
         Vector3[] worldCorners = new Vector3[4];
-        worldCorners[0] = new Vector3(bounds.min.x, bounds.min.y, bounds.min.z); // Bottom Left
-        worldCorners[1] = new Vector3(bounds.max.x, bounds.min.y, bounds.min.z); // Bottom Right
-        worldCorners[2] = new Vector3(bounds.min.x, bounds.min.y, bounds.max.z); // Top Left
-        worldCorners[3] = new Vector3(bounds.max.x, bounds.min.y, bounds.max.z); // Top Right
+        float cornerOffset = 0.4f; // For chessboard scale 10
+        worldCorners[0] = new Vector3(bounds.min.x+cornerOffset, bounds.min.y, bounds.min.z+cornerOffset); // Bottom Left
+        worldCorners[1] = new Vector3(bounds.max.x-cornerOffset, bounds.min.y, bounds.min.z+cornerOffset); // Bottom Right
+        worldCorners[2] = new Vector3(bounds.min.x+cornerOffset, bounds.min.y, bounds.max.z-cornerOffset); // Top Left
+        worldCorners[3] = new Vector3(bounds.max.x-cornerOffset, bounds.min.y, bounds.max.z-cornerOffset); // Top Right
         string[] cornerNames = { "Bottom Left", "Bottom Right", "Top Left", "Top Right" };
         // Project each corner onto the screen
 
@@ -88,14 +93,14 @@ public class SetCameraPosition : MonoBehaviour
         
         string filename = "Label_data_" + System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".txt";
         string filepath = System.IO.Path.Combine(labelFolderPath, filename);
-
+        
         using (StreamWriter writer = new StreamWriter(filepath, false)) {     
             for (int i = 0; i < worldCorners.Length; i++)
             {
                 Vector3 screenPosition = mainCamera.WorldToScreenPoint(worldCorners[i]);
                 if (screenPosition.z > 0) // Ensure it’s visible
                 {
-                    writer.WriteLine(0 + " " + screenPosition.x + " " + screenPosition.y + " " + "0.1" + " " + "0.1"); // class x y width height
+                    writer.WriteLine(0 + " " + screenPosition.x/Screen.width + " " + screenPosition.y/Screen.height + " " + "0.1" + " " + "0.1"); // class x y width height
                     Debug.Log($"{cornerNames[i]} projected at: {screenPosition}");
                 }
                 else

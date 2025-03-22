@@ -245,7 +245,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -5971663317599960168, guid: 333d9e0c2d0c22bb5ad021bc40a7a257, type: 3}
   m_PrefabInstance: {fileID: 207867402}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &914362444
+--- !u!1 &672738973
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,39 +253,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 914362446}
-  - component: {fileID: 914362445}
+  - component: {fileID: 672738975}
+  - component: {fileID: 672738974}
   m_Layer: 0
-  m_Name: GetCornerCoords
+  m_Name: SetGameState
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &914362445
+--- !u!114 &672738974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 914362444}
+  m_GameObject: {fileID: 672738973}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8fa70bcf9a9f45db8de6234d3780740, type: 3}
+  m_Script: {fileID: 11500000, guid: 101bf0ce79f4a4fbda289ef8d12e7d08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 1823688466}
-  chessboard: {fileID: 651311992}
---- !u!4 &914362446
+--- !u!4 &672738975
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 914362444}
+  m_GameObject: {fileID: 672738973}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5672748, y: -0.3559975, z: 1.941626}
+  m_LocalPosition: {x: -11.303129, y: -13.866836, z: 1.4317405}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -620,13 +618,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e044811785b64eac9716b557d11d90f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  upscale: 10
   min_rho: 5
   max_rho: 7
   min_theta: -0.7853982
   max_theta: 0.7853982
   min_phi: 0.5235988
   max_phi: 1.0471976
-  rotation_offset: 0
+  max_rotation_offset: 1
+  screenshotFolderPath: Assets/Screenshots/
+  labelFolderPath: Assets/Labels/
   mainCamera: {fileID: 1823688466}
   chessboard: {fileID: 651311992}
 --- !u!1 &1717317103
@@ -783,7 +784,7 @@ Camera:
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 20.78461
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -1029,5 +1030,5 @@ SceneRoots:
   - {fileID: 1530527515}
   - {fileID: 1494220582}
   - {fileID: 1717317107}
-  - {fileID: 914362446}
   - {fileID: 1649105047}
+  - {fileID: 672738975}
