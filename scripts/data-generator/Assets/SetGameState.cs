@@ -22,7 +22,14 @@ public class SetGameState : MonoBehaviour
             { 'K', "King White" },
             { 'P', "Pawn White" }
         };
-    public string fen = "rnbqkb1r/pp1p1ppp/4p2n/2p5/8/2N1P2N/PPPP1PPP/R1BQKB1R";
+    private List<string> fens = new List<string>() {
+    "rnbqkb1r/pp1p1ppp/4p2n/2p5/8/2N1P2N/PPPP1PPP/R1BQKB1R",
+    "r6r/1b2k1bq/8/8/7B/8/8/R3K2R", 
+    "8/8/8/2k5/2pP4/8/B7/4K3", 
+    "r1bqkbnr/pppppppp/n7/8/8/P7/1PPPPPPP/RNBQKBNR", 
+    "r3k2r/p1pp1pb1/bn2Qnp1/2qPN3/1p2P3/2N5/PPPBBPPP/R3K2R",
+    "2kr3r/p1ppqpb1/bn2Qnp1/3PN3/1p2P3/2N5/PPPBBPPP/R3K2R"};
+    // https://gist.github.com/peterellisjones/8c46c28141c162d1d8a0f0badbc9cff9 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,6 +45,7 @@ public class SetGameState : MonoBehaviour
 
     void setBoardState() {
         int x = 0;
+        string fen = fens[UnityEngine.Random.Range(0, fens.Count)];
         foreach (char chr in fen) {
             if (chr == '/') {continue;}
             if (Char.IsDigit(chr))
@@ -54,11 +62,12 @@ public class SetGameState : MonoBehaviour
 
     void place(string piece, int idx) {
         Debug.Log(idx);
-        float col_zero = -(5.6f-0.8f)/2f; // The x position of a1
-        float row_zero = (5.6f-0.8f)/2f; // The y position of a1
-        float square_size = 0.6f; // (5.6 - 2*0.4)/ 8
+        float square_size = 0.6f;
+        float col_zero = (5.0f-0.8f)/2f; // The x position of a1
+        float row_zero = (4.98f-0.8f)/2f; // The y position of a1
+        
 
-        float col = col_zero + idx % 8 * square_size;
+        float col = col_zero - idx % 8 * square_size;
         float row = row_zero - idx / 8 * square_size;
 
         Vector3 position = new Vector3(row, 0, col);
