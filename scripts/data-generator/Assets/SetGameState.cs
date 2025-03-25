@@ -4,6 +4,8 @@ using Unity.VisualScripting.FullSerializer;
 using UnityEditor.Experimental.GraphView;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using UnityEngine.Rendering;
 
 public class SetGameState : MonoBehaviour
 {
@@ -31,10 +33,12 @@ public class SetGameState : MonoBehaviour
     "2kr3r/p1ppqpb1/bn2Qnp1/3PN3/1p2P3/2N5/PPPBBPPP/R3K2R"};
     // https://gist.github.com/peterellisjones/8c46c28141c162d1d8a0f0badbc9cff9 
 
+
+    private List<GameObject> clones = new List<GameObject>();
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        setBoardState();
     }
 
     // Update is called once per frame
@@ -43,9 +47,22 @@ public class SetGameState : MonoBehaviour
         
     }
 
-    void setBoardState() {
+    public void setBoardState() {
+        
+        while (clones.Count > 0) {
+            
+            GameObject c = clones.ElementAt(0);
+            clones.RemoveAt(0);
+            if (c != null) {
+               Destroy(c);
+            }
+            c = null;
+            
+        }
+
         int x = 0;
-        string fen = fens[UnityEngine.Random.Range(0, fens.Count)];
+        //string fen = fens[UnityEngine.Random.Range(0, fens.Count)];
+        string fen = RandomFENGenerator.GenerateRandomFEN();
         foreach (char chr in fen) {
             if (chr == '/') {continue;}
             if (Char.IsDigit(chr))
@@ -53,7 +70,6 @@ public class SetGameState : MonoBehaviour
                 x += chr - 48;
             }
             else {
-                Debug.Log(":)    " + chr );
                 place(fenPieceMap[chr], x);
                 x += 1;  
             }
@@ -61,7 +77,6 @@ public class SetGameState : MonoBehaviour
     }
 
     void place(string piece, int idx) {
-        Debug.Log(idx);
         float square_size = 0.6f;
         float col_zero = (5.0f-0.8f)/2f; // The x position of a1
         float row_zero = (4.98f-0.8f)/2f; // The y position of a1
@@ -82,6 +97,8 @@ public class SetGameState : MonoBehaviour
 
         GameObject clone = Instantiate(prefab, position, rotation);
         clone.transform.localScale = new Vector3(1000, 1000, 1000);
+
+        clones.Add(clone);
         
         // Modify the clone to your heart's content
     }

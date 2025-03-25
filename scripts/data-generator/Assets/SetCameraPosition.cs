@@ -5,6 +5,7 @@ using Unity.Collections;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
+
 public class SetCameraPosition : MonoBehaviour
 {
     public int upscale = 2;
@@ -21,6 +22,8 @@ public class SetCameraPosition : MonoBehaviour
     public string labelFolderPath = "Assets/Labels/";
     public Camera mainCamera;  // The camera to project onto
     public GameObject chessboard; // The chessboard object
+    public SetGameState setGameState;
+    public GenerateRandData gendat;
     void Start()
     {
         if (mainCamera == null)
@@ -29,7 +32,7 @@ public class SetCameraPosition : MonoBehaviour
         }
         if (chessboard != null)
         {
-            SetCamera();
+            //SetCamera();
         }
         else
         {
@@ -37,7 +40,7 @@ public class SetCameraPosition : MonoBehaviour
         }
     }
     [ContextMenu("Randomize camera position")]
-    void SetCamera()
+    public void SetCamera()
     {
         double rho;
         double theta;
@@ -57,10 +60,12 @@ public class SetCameraPosition : MonoBehaviour
         mainCamera.transform.LookAt(chessboard.transform.transform, new Vector3(0,1,0));
         chessboard.transform.transform.position -= rotation_offset;
 
+        setGameState.setBoardState();
+
         if (!System.IO.Directory.Exists(screenshotFolderPath))
             System.IO.Directory.CreateDirectory(screenshotFolderPath);
         
-        var screenshotName = "Chess_Image_" + System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
+        var screenshotName = "Chess_Image_" + System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + "-"+gendat.num +".png";
         ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(screenshotFolderPath, screenshotName), upscale);
         Debug.Log(System.IO.Path.Combine(screenshotFolderPath,screenshotName));
 
@@ -91,7 +96,7 @@ public class SetCameraPosition : MonoBehaviour
         if (!System.IO.Directory.Exists(labelFolderPath))
             System.IO.Directory.CreateDirectory(labelFolderPath);
         
-        string filename = "Label_data_" + System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".txt";
+        string filename = "Label_data_" + System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + "-" + gendat.num + ".txt";
         string filepath = System.IO.Path.Combine(labelFolderPath, filename);
         
         using (StreamWriter writer = new StreamWriter(filepath, false)) {     
