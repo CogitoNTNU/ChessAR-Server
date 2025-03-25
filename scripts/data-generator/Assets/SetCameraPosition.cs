@@ -16,7 +16,7 @@ public class SetCameraPosition : MonoBehaviour
     public float min_phi = Convert.ToSingle(Math.PI)/6;
     public float max_phi = Convert.ToSingle(Math.PI)/3;
 
-    public float max_rotation_offset = 1;
+  public float max_rotation_offset = 1;
 
     public string screenshotFolderPath = "Assets/Screenshots/";
     public string labelFolderPath = "Assets/Labels/";
@@ -48,12 +48,15 @@ public class SetCameraPosition : MonoBehaviour
         
         int color = UnityEngine.Random.value < 0.5f ? 0 : 1;
 
-        rho = Convert.ToDouble(UnityEngine.Random.Range(min_rho, max_rho));
-        theta = Convert.ToDouble(color*Math.PI+UnityEngine.Random.Range(min_theta, max_theta));
-        phi = Convert.ToDouble(UnityEngine.Random.Range(min_phi, max_phi));
+    rho = Convert.ToDouble(UnityEngine.Random.Range(min_rho, max_rho));
+    theta = Convert.ToDouble(color * Math.PI +
+                             UnityEngine.Random.Range(min_theta, max_theta));
+    phi = Convert.ToDouble(UnityEngine.Random.Range(min_phi, max_phi));
 
-        Vector3 rotation_offset = new Vector3(UnityEngine.Random.Range(-max_rotation_offset, max_rotation_offset), 0, UnityEngine.Random.Range(-max_rotation_offset, max_rotation_offset));
-        chessboard.transform.transform.position += rotation_offset;
+    Vector3 rotation_offset = new Vector3(
+        UnityEngine.Random.Range(-max_rotation_offset, max_rotation_offset), 0,
+        UnityEngine.Random.Range(-max_rotation_offset, max_rotation_offset));
+    chessboard.transform.transform.position += rotation_offset;
 
         Vector3 position = new Vector3(Convert.ToSingle(rho*Math.Sin(phi)*Math.Cos(theta)), Convert.ToSingle(rho*Math.Cos(phi)), Convert.ToSingle(rho*Math.Sin(phi)*Math.Sin(theta)));
         mainCamera.transform.position = position;
@@ -70,28 +73,31 @@ public class SetCameraPosition : MonoBehaviour
         Debug.Log(System.IO.Path.Combine(screenshotFolderPath,screenshotName));
 
 
-        SaveLabels();
-    }
+    SaveLabels();
+  }
 
-    void SaveLabels()
-    {
-        // Get the mesh bounds of the chessboard
-        Renderer boardRenderer = chessboard.GetComponent<Renderer>();
-        if (boardRenderer == null)
-        {
-            Debug.LogError("No Renderer found on the chessboard!");
-            return;
-        }
-        Bounds bounds = boardRenderer.bounds;
-        // Define the four corners in world space
-        Vector3[] worldCorners = new Vector3[4];
-        float cornerOffset = 0.4f; // For chessboard scale 10
-        worldCorners[0] = new Vector3(bounds.min.x+cornerOffset, bounds.min.y, bounds.min.z+cornerOffset); // Bottom Left
-        worldCorners[1] = new Vector3(bounds.max.x-cornerOffset, bounds.min.y, bounds.min.z+cornerOffset); // Bottom Right
-        worldCorners[2] = new Vector3(bounds.min.x+cornerOffset, bounds.min.y, bounds.max.z-cornerOffset); // Top Left
-        worldCorners[3] = new Vector3(bounds.max.x-cornerOffset, bounds.min.y, bounds.max.z-cornerOffset); // Top Right
-        string[] cornerNames = { "Bottom Left", "Bottom Right", "Top Left", "Top Right" };
-        // Project each corner onto the screen
+  void SaveLabels() {
+    // Get the mesh bounds of the chessboard
+    Renderer boardRenderer = chessboard.GetComponent<Renderer>();
+    if (boardRenderer == null) {
+      Debug.LogError("No Renderer found on the chessboard!");
+      return;
+    }
+    Bounds bounds = boardRenderer.bounds;
+    // Define the four corners in world space
+    Vector3[] worldCorners = new Vector3[4];
+    float cornerOffset = 0.4f; // For chessboard scale 10
+    worldCorners[0] = new Vector3(bounds.min.x + cornerOffset, bounds.min.y,
+                                  bounds.min.z + cornerOffset); // Bottom Left
+    worldCorners[1] = new Vector3(bounds.max.x - cornerOffset, bounds.min.y,
+                                  bounds.min.z + cornerOffset); // Bottom Right
+    worldCorners[2] = new Vector3(bounds.min.x + cornerOffset, bounds.min.y,
+                                  bounds.max.z - cornerOffset); // Top Left
+    worldCorners[3] = new Vector3(bounds.max.x - cornerOffset, bounds.min.y,
+                                  bounds.max.z - cornerOffset); // Top Right
+    string[] cornerNames = { "Bottom Left", "Bottom Right", "Top Left",
+                             "Top Right" };
+    // Project each corner onto the screen
 
         if (!System.IO.Directory.Exists(labelFolderPath))
             System.IO.Directory.CreateDirectory(labelFolderPath);
@@ -116,4 +122,3 @@ public class SetCameraPosition : MonoBehaviour
         }
     }
 }
-
