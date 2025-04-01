@@ -34,22 +34,20 @@ class WishBoneRepresentation(Representation):
             piece = PiecePositions(x=temp_piece['x'], y=temp_piece['y'], piece=temp_piece['class'], probability=temp_piece['confidence'])
             pieces.append(piece)
 
-        
-        print(pieces)
-
+       
         return pieces
 
-    def compute(self, input: Any) -> List[PiecePositions]:
+    def compute(self, input: Any) -> Chessboard:
         """
         Takes the input from the viewport and returns the state of the chess board.
 
         input - the stream or image input from the viewport.
         """
-        #bord_corners: List[Corners] = self.YOLO_detect_corners(input) # Get the corners of the chessboard
+        bord_corners: List[Corners] = self.YOLO_detect_corners(input) # Get the corners of the chessboard
 
         pieces: List[PiecePositions] = self.YOLO_detect_pieces(input) # Get the pieces from the image
 
-        #chessboard = self.environment.to_env(PositionalParams(corner_positions=bord_corners, piece_positions=pieces))
+        chessboard = self.environment.to_env(PositionalParams(corner_positions=bord_corners, piece_positions=pieces))
 
-        return pieces
+        return chessboard
 

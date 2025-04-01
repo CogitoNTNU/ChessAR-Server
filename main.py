@@ -42,9 +42,8 @@ from src.viewport.mock_viewport import MockViewport
 
 def main() -> None:
     MV = MockViewport()
-    MV.get_output("image.png")
-    print(MV)
-    
+    chessboard = MV.get_output()
+    print (chessboard)
 
 if __name__ == "__main__":
     main()
