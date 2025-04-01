@@ -1,13 +1,11 @@
-from abc import ABC, abstractmethod
-from typing import Union
-from environment.environment import Environment
+from typing import Any, Protocol
 
 """
 This module implements the representation layer of the overall architecture.
 """
 
 
-class Representation(ABC):
+class Representation(Protocol):
     """
     This interface defines how all representation layer should work.
 
@@ -23,28 +21,10 @@ class Representation(ABC):
     You are free to implement any missing methods you see fit.
     """
 
-    def __init__(self, environment: Environment) -> None:
-        self.environment = environment
-
-    @abstractmethod
-    def compute(self, input):
+    def compute(self, input) -> Any:
         """
         Takes the input from the viewport and returns the state of the chess board.
 
         input - the stream or image input from the viewport.
         """
         pass
-
-    @abstractmethod
-    def get_state(self, abstract) -> Union[str, None]:
-        """
-        Returns the current state of the chess board as a fen string.
-
-        abstract - the stream or image input from the viewport.
-        """
-        env_state = self.environment.to_env(input)
-
-        if not self.environment.is_valid(env_state):
-            return None
-
-        return self.environment.to_fen(env_state)

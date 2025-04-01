@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import List
 
 from src.environment.environment import Environment
 
@@ -23,8 +23,8 @@ class PiecePositions(BaseModel):
 
 class PositionalParams(BaseModel):
     """The positional arguments for the environment"""
-    corner_positions: List[Corners]
-    piece_positions: List[PiecePositions]
+    corner_positions: List[Corners] | None
+    piece_positions: List[PiecePositions] | None
 
 class SquarePosition(BaseModel):
     x: float
