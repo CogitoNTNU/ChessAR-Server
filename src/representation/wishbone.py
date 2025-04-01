@@ -3,6 +3,7 @@ from src.   representation.representation import Representation
 from typing import Any, List
 from PIL import Image
 
+
 from inference_sdk import InferenceHTTPClient
 
 
@@ -17,17 +18,15 @@ class WishBoneRepresentation(Representation):
         pass
 
 
-    def YOLO_detect_pieces(self, input: Any) -> List[PiecePositions]:
+    def YOLO_detect_pieces(self, input: Image) -> List[PiecePositions]:
         """YOLOV# model to detect pieces and their positions"""
-        image = Image.open("./src/representation/image.png")
-        image = image.convert('RGB')
 
         CLIENT = InferenceHTTPClient(
             api_url="https://detect.roboflow.com",
             api_key="KWXDph0Kgrmgyro7XGtS"
         )
 
-        board = CLIENT.infer(image, model_id="chess-piece-detection-5ipnt/3")
+        board = CLIENT.infer(input, model_id="chess-piece-detection-5ipnt/3")
         
         pieces: List[PiecePositions] = []
 
@@ -40,17 +39,17 @@ class WishBoneRepresentation(Representation):
 
         return pieces
 
-    def compute(self, input: Any) -> Chessboard:
+    def compute(self, input: Any) -> List[PiecePositions]:
         """
         Takes the input from the viewport and returns the state of the chess board.
 
         input - the stream or image input from the viewport.
         """
-        bord_corners: List[Corners] = self.YOLO_detect_corners(input) # Get the corners of the chessboard
+        #bord_corners: List[Corners] = self.YOLO_detect_corners(input) # Get the corners of the chessboard
 
         pieces: List[PiecePositions] = self.YOLO_detect_pieces(input) # Get the pieces from the image
 
-        chessboard = self.environment.to_env(PositionalParams(corner_positions=bord_corners, piece_positions=pieces))
+        #chessboard = self.environment.to_env(PositionalParams(corner_positions=bord_corners, piece_positions=pieces))
 
-        return chessboard
+        return pieces
 

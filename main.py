@@ -38,13 +38,13 @@ from src.environment.environment import Environment
 from src.environment.positional import Positional, PositionalParams
 from src.representation.representation import Representation
 from src.representation.wishbone import WishBoneRepresentation
-
+from src.viewport.mock_viewport import MockViewport
 
 def main() -> None:
-    environment: Environment = Positional()
-    repr: Representation = WishBoneRepresentation(environment)
-    repr.compute("input")
-
+    MV = MockViewport()
+    MV.get_output("image.png")
+    print(MV)
+    
 
 if __name__ == "__main__":
     main()
