@@ -26,9 +26,22 @@ class PositionalParams(BaseModel):
     corner_positions: List[Corners]
     piece_positions: List[PiecePositions]
 
+class SquarePosition(BaseModel):
+    x: float
+    y: float
+
 
 class Positional(Environment):
     """Implements an environment that intakes positional arguments from an image, the corner positions and all the piece positions detected"""
+    def __init__(self):
+        self.state = [[Piece() for _ in range(8)] for __ in range(8)]
+        self.square_positions = []
+
+    def get_square_positions(corners: List[Corners]) -> SquarePosition:
+        pass
+
+    def closest_chess_square(square_pos: List[SquarePosition], piece: PiecePositions) -> int:
+        pass
 
     def to_env(self, repr_state: PositionalParams) -> Chessboard:
         """
@@ -40,7 +53,9 @@ class Positional(Environment):
         Returns:
             Chessboard: The environment state, a chess board
         """
-        pass
+        for piece in repr_state.piece_positions:
+            pass
+
 
     def is_valid(self, state: Chessboard) -> bool:
         """
