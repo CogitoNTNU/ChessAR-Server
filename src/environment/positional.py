@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import List
 
 from src.environment.environment import Environment
 import numpy as np
@@ -23,8 +23,8 @@ class PiecePositions(BaseModel):
 
 class PositionalParams(BaseModel):
     """The positional arguments for the environment"""
-    corner_positions: List[Corners]
-    piece_positions: List[PiecePositions]
+    corner_positions: List[Corners] | None
+    piece_positions: List[PiecePositions] | None
 
 class SquarePosition(BaseModel):
     x: float
@@ -139,4 +139,20 @@ class Positional(Environment):
 
 
     def to_fen(self, state: Chessboard) -> fen:
-        pass
+        fen = ""
+        for i in range(len(state)):
+            for j in range(len(state[0])):
+                if state[i][j] != "":
+                    if num > 0:
+                        fen += str(num)
+                        num = 0
+                    fen += state[i][j]
+                else:
+                    num += 1
+
+            if num > 0:
+                fen += "num"
+                num = 0
+            fen += "/"
+
+        return fen
