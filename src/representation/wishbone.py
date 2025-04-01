@@ -1,6 +1,10 @@
 from src.environment.positional import Chessboard, Corners, PiecePositions, Positional, PositionalParams
-from src.representation.representation import Representation
+from src.   representation.representation import Representation
 from typing import Any, List
+from PIL import Image
+
+
+from inference_sdk import InferenceHTTPClient
 
 
 class WishBoneRepresentation(Representation):
@@ -14,9 +18,24 @@ class WishBoneRepresentation(Representation):
         pass
 
 
-    def YOLO_detect_pieces(self, input: Any) -> List[PiecePositions]:
+    def YOLO_detect_pieces(self, input: Image) -> List[PiecePositions]:
         """YOLOV# model to detect pieces and their positions"""
-        pass
+
+        CLIENT = InferenceHTTPClient(
+            api_url="https://detect.roboflow.com",
+            api_key="KWXDph0Kgrmgyro7XGtS"
+        )
+
+        board = CLIENT.infer(input, model_id="chess-piece-detection-5ipnt/3")
+        
+        pieces: List[PiecePositions] = []
+
+        for temp_piece in board['predictions']:
+            piece = PiecePositions(x=temp_piece['x'], y=temp_piece['y'], piece=temp_piece['class'], probability=temp_piece['confidence'])
+            pieces.append(piece)
+
+       
+        return pieces
 
     def compute(self, input: Any) -> Chessboard:
         """
