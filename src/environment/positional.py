@@ -29,13 +29,7 @@ class PositionalParams(BaseModel):
     corner_positions: List[Corners]
     piece_positions: List[PiecePositions]
 
-class SquarePosition(BaseModel):
-    x: float
-    y: float
 
-class BoardSpacePiece(BaseModel):
-    vec: np.ndarray
-    piece: Piece
 
 
 
@@ -54,12 +48,12 @@ class Positional(Environment):
         chessboard = [["" for _ in range(8)] for __ in range(8)]
         pieces = self.get_piece_positions_in_board_space(repr_state)
         for piece in pieces:
-            row = round(piece.vec.x * 8)
-            col = round(piece.vec.y * 8)
+            row = round(piece.x * 8)
+            col = round(piece.y * 8)
             if chessboard[row][col] == "":
                 chessboard[row][col] = piece.piece
             else:
-                print(f"Error: pieces {piece.piece} and {chessboard[row][col]} have the same position!")
+                print(f"Error: pieces {piece.piece} and {chessboard[row][col]} are on the same square!")
         
         return chessboard
 
@@ -80,7 +74,7 @@ class Positional(Environment):
         lowest_dot = 100000
         index_ldot = []
         for i in range(len(vecs)):
-            for j in range(j, len(vecs)):
+            for j in range(i, len(vecs)):
                 dot = np.abs(np.linalg.vecdot(np.linalg.norm(vecs[i]), np.linalg.norm(vecs[j])))
                 if dot < lowest_dot:
                     lowest_dot = dot
@@ -91,11 +85,11 @@ class Positional(Environment):
         n_vec_1 = np.array([1,0])
         n_vec_2 = np.array([0,1])
 
-        matrix = np.linalg.matmul(np.array([n_vec_1, n_vec_2]), np.linalg.inv([vec1, vec2]))
+        matrix = np.linalg.matmul(np.array([n_vec_1, n_vec_2]), np.linalg.inv(np.array([vec1, vec2])))
 
         return matrix
 
-    def transform_to_board_vector(transform_matrix: np.ndarray, vec: np.ndarray) -> np.ndarray:
+    def transform_to_board_space_vector(transform_matrix: np.ndarray, vec: np.ndarray) -> np.ndarray:
         """
         Transform a piece position from screen space to board space using the transformation matrix
         Args:
@@ -106,13 +100,13 @@ class Positional(Environment):
         """
         return np.linalg.matmul(transform_matrix, vec)
 
-    def get_piece_positions_in_board_space(self, board: PositionalParams) -> List[BoardSpacePiece]:
+    def get_piece_positions_in_board_space(self, board: PositionalParams) -> List[PiecePositions]:
         """
         Takes in a board in screen space, and transform all pieces position to a vector relative to corners[0]
         Args:
             board (PositionalParams): A chess board where positions are in screen space
         Returns:
-            List[BoardSpacePiece]: List of all pieces with positions given with a vector relative to corners[0]
+            List[PiecePositions]: List of all pieces with positions given with a vector relative to corners[0]
         """
         corners = board.corner_positions
         pieces = board.piece_positions
@@ -123,7 +117,8 @@ class Positional(Environment):
 
         for piece in pieces:
             vec = np.array([piece.x - corners[0].x, piece.y - corners[0].y])
-            board_space = BoardSpacePiece(self.transform_to_board_vector(t_matrix, vec), piece.piece)
+            transformation = self.transform_to_board_vector(t_matrix, vec)
+            board_space = PiecePositions(transformation[0], transformation[1], piece.piece, piece.probability)
             board_space_piece_pos.append(board_space)
         
         return board_space_piece_pos
