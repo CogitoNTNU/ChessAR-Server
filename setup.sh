@@ -11,7 +11,22 @@ else
     exit 1
 fi
 
+
 OS="$(uname -s)"
+
+echo "Creating virtual environment..."
+if [[ "$OS" == "Darwin"* ]]; then
+    python3 -m venv .venv
+else
+    python -m venv .venv
+fi
+
+echo "Activating virtual environment..."
+if [[ "$OS" == "Darwin"* ]]; then
+    source .venv/bin/activate
+else
+    source .venv/Scripts/activate
+
 
 if [[ "$OS" == "Darwin"* ]]; then
     echo "Installing requirements using pip3..."
