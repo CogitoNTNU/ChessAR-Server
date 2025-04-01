@@ -1,8 +1,10 @@
 from typing import List
 
 from src.environment.environment import Environment
+from src.environment.fen import Fen
 
 from pydantic import BaseModel
+import chess
 
 # This is a type alias for a fen string
 fen = str
@@ -23,8 +25,8 @@ class PiecePositions(BaseModel):
 
 class PositionalParams(BaseModel):
     """The positional arguments for the environment"""
-    corner_positions: List[Corners] | None
-    piece_positions: List[PiecePositions] | None
+    corner_positions: List[Corners]
+    piece_positions: List[PiecePositions]
 
 class SquarePosition(BaseModel):
     x: float
@@ -56,7 +58,7 @@ class Positional(Environment):
         pass
 
 
-    def is_valid(self, state: Chessboard) -> bool:
+    def is_valid(self, fen: fen) -> bool:
         """
         Checks if the fens string is a valid chessboard state
 
@@ -66,10 +68,12 @@ class Positional(Environment):
         Returns:
             bool: True if the state is a valid chessboard state, False otherwise
         """
-        pass
+        env = Fen()
+        return env.is_valid(fen)
 
     def to_fen(self, state: Chessboard) -> fen:
         fen = ""
+        num = 0
         for i in range(len(state)):
             for j in range(len(state[0])):
                 if state[i][j] != "":
@@ -79,10 +83,10 @@ class Positional(Environment):
                     fen += state[i][j]
                 else:
                     num += 1
-
             if num > 0:
-                fen += "num"
+                fen += str(num)
                 num = 0
-            fen += "/"
-
+            if i < len(state)-1:
+                fen += "/"
+        fen += " w - - 0 0"
         return fen
