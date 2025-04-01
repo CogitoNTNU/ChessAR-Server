@@ -34,11 +34,13 @@ class MockViewport(ViewPort):
             return []
         
         ret, frame = cap.read()
+        cv2.imwrite("frame.jpg", frame)
 
         if ret:
             image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
             image = image.convert('RGB')
             
+
             result = self.repr.YOLO_detect_pieces(image)
         else:
             print("Error: Could not read frame.")
