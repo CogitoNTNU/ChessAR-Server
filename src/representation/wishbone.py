@@ -29,9 +29,16 @@ class WishBoneRepresentation(Representation):
 
         board = CLIENT.infer(image, model_id="chess-piece-detection-5ipnt/3")
         
-        
+        pieces: List[PiecePositions] = []
 
-        return None
+        for temp_piece in board['predictions']:
+            piece = PiecePositions(x=temp_piece['x'], y=temp_piece['y'], piece=temp_piece['class'], probability=temp_piece['confidence'])
+            pieces.append(piece)
+
+        
+        print(pieces)
+
+        return pieces
 
     def compute(self, input: Any) -> Chessboard:
         """
