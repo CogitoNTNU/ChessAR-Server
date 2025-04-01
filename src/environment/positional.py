@@ -53,8 +53,7 @@ class Positional(Environment):
         Returns:
             Chessboard: The environment state, a chess board
         """
-        for piece in repr_state.piece_positions:
-            pass
+        pass
 
 
     def is_valid(self, state: Chessboard) -> bool:
@@ -70,4 +69,20 @@ class Positional(Environment):
         pass
 
     def to_fen(self, state: Chessboard) -> fen:
-        pass
+        fen = ""
+        for i in range(len(state)):
+            for j in range(len(state[0])):
+                if state[i][j] != "":
+                    if num > 0:
+                        fen += str(num)
+                        num = 0
+                    fen += state[i][j]
+                else:
+                    num += 1
+
+            if num > 0:
+                fen += "num"
+                num = 0
+            fen += "/"
+
+        return fen
