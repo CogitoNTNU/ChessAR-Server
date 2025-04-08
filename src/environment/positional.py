@@ -57,7 +57,7 @@ class Positional(Environment):
         
         return chessboard
 
-    def find_transformation_matrix(corners: List[Corners]) -> np.ndarray:
+    def find_transformation_matrix(self, corners: List[Corners]) -> np.ndarray:
         """
         Finds the transformation vector to convert from screen space to board space given the corners of the chess board
         Args:
@@ -75,7 +75,7 @@ class Positional(Environment):
         index_ldot = []
         for i in range(len(vecs)):
             for j in range(i, len(vecs)):
-                dot = np.abs(np.linalg.vecdot(np.linalg.norm(vecs[i]), np.linalg.norm(vecs[j])))
+                dot = np.abs(np.dot(vecs[i] / np.linalg.norm(vecs[i]), vecs[j] / np.linalg.norm(vecs[j])))
                 if dot < lowest_dot:
                     lowest_dot = dot
                     index_ldot = [i, j]
@@ -89,7 +89,7 @@ class Positional(Environment):
 
         return matrix
 
-    def transform_to_board_space_vector(transform_matrix: np.ndarray, vec: np.ndarray) -> np.ndarray:
+    def transform_to_board_space_vector(self, transform_matrix: np.ndarray, vec: np.ndarray) -> np.ndarray:
         """
         Transform a piece position from screen space to board space using the transformation matrix
         Args:
@@ -117,7 +117,7 @@ class Positional(Environment):
 
         for piece in pieces:
             vec = np.array([piece.x - corners[0].x, piece.y - corners[0].y])
-            transformation = self.transform_to_board_vector(t_matrix, vec)
+            transformation = self.transform_to_board_space_vector(t_matrix, vec)
             board_space = PiecePositions(transformation[0], transformation[1], piece.piece, piece.probability)
             board_space_piece_pos.append(board_space)
         
@@ -136,7 +136,7 @@ class Positional(Environment):
             bool: True if the state is a valid chessboard state, False otherwise
         """
         env = Fen()
-        return env.is_valid(fen)
+        return env.is_valid(self.to_fen(state))
         
 
     def to_fen(self, state: Chessboard) -> fen:
