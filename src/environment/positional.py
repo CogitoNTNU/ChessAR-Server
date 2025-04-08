@@ -48,8 +48,8 @@ class Positional(Environment):
         chessboard = [["" for _ in range(8)] for __ in range(8)]
         pieces = self.get_piece_positions_in_board_space(repr_state)
         for piece in pieces:
-            row = round(piece.x * 8)
-            col = round(piece.y * 8)
+            row = int(piece.x * 8)
+            col = int(piece.y * 8)
             if chessboard[row][col] == "":
                 chessboard[row][col] = piece.piece
             else:
@@ -85,7 +85,7 @@ class Positional(Environment):
         n_vec_1 = np.array([1,0])
         n_vec_2 = np.array([0,1])
 
-        matrix = np.linalg.matmul(np.array([n_vec_1, n_vec_2]), np.linalg.inv(np.array([vec1, vec2])))
+        matrix = np.matmul(np.array([n_vec_1, n_vec_2]), np.linalg.inv(np.array([vec1, vec2])))
 
         return matrix
 
@@ -98,7 +98,7 @@ class Positional(Environment):
         Returns:
             np.ndarray: 2d vector in board space
         """
-        return np.linalg.matmul(transform_matrix, vec)
+        return np.matmul(transform_matrix, vec)
 
     def get_piece_positions_in_board_space(self, board: PositionalParams) -> List[PiecePositions]:
         """
@@ -118,7 +118,7 @@ class Positional(Environment):
         for piece in pieces:
             vec = np.array([piece.x - corners[0].x, piece.y - corners[0].y])
             transformation = self.transform_to_board_space_vector(t_matrix, vec)
-            board_space = PiecePositions(transformation[0], transformation[1], piece.piece, piece.probability)
+            board_space = PiecePositions(x=transformation[0], y=transformation[1], piece=piece.piece, probability=piece.probability)
             board_space_piece_pos.append(board_space)
         
         return board_space_piece_pos
