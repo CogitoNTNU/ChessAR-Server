@@ -2,48 +2,48 @@
 This is the main file for the project. Everything starts here...
 """
 
-# from representation.representation import Representation
-# from environment.environment import Environment
-# from model.model import Model
-# from viewport.viewport import ViewPort
-# from time import sleep
-#
-#
-# class Server:
-#     def __init__(
-#         self,
-#         representation: Representation,
-#         environment: Environment,
-#         model: Model,
-#         viewport: ViewPort,
-#     ) -> None:
-#         self.representation = representation
-#         self.environment = environment
-#         self.model = model
-#         self.viewport = viewport
-#
-#     def run(self) -> None:
-#         while True:
-#             vp_out = self.viewport.get_output()
-#             abstract = self.representation.compute(vp_out)
-#             state = self.representation.get_state(abstract)
-#             if state is None:
-#                 raise Exception("Invalid state")
-#             best_move = self.model.get_best_move(state)
-#             print("Best move:", best_move)
-#             sleep(1)
-
-
+from dataclasses import dataclass
 from src.environment.environment import Environment
-from src.environment.positional import Positional, PositionalParams
+from src.environment.positional import Chessboard, Positional
+from src.model.model import Model
+from src.viewport.viewport import ViewPort
+from src.model.stockfish import Stockfish
 from src.representation.representation import Representation
-from src.representation.wishbone import WishBoneRepresentation
+from src.representation.wishbone import WishBone
+from src.viewport.snapshot import SnapShot, ViewPortImage
 
+@dataclass
+class Configuration:
+    viewport: ViewPort
+    environment: Environment
+    representation: Representation
+    model: Model
+
+def setup() -> Configuration:
+    """Setup the environment, representation and model"""
+
+    viewport: ViewPort = SnapShot()
+    environment: Environment = Positional()
+    repr: Representation = WishBone(environment)
+    model: Model = Stockfish()
+
+    return Configuration(viewport=viewport, environment=environment, representation=repr, model=model)
 
 def main() -> None:
-    environment: Environment = Positional()
-    repr: Representation = WishBoneRepresentation(environment)
-    repr.compute("input")
+    callbacks = setup()
+    image: ViewPortImage = callbacks.viewport.get_output()
+    chessboard: Chessboard = callbacks.representation.compute(image)
+
+    if not callbacks.environment.is_valid(chessboard):
+        raise ValueError("Invalid chessboard state")
+
+    fen: str = callbacks.environment.to_fen(chessboard)
+
+    print(f"FEN: {fen} \n")
+
+    best_move = callbacks.model.get_best_move(fen)
+
+    print(f"Best move: {best_move} \n")
 
 
 if __name__ == "__main__":
