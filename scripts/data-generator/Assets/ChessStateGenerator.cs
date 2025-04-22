@@ -7,7 +7,8 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Rendering;
 
-public class SetGameState : MonoBehaviour {
+public class ChessStateGenerator : MonoBehaviour
+{
   private Dictionary<char, string> fenPieceMap =
       new Dictionary<char, string>() {
         { 'r', "Rock  Black" },   { 'n', "Knight  Black" },
@@ -28,50 +29,46 @@ public class SetGameState : MonoBehaviour {
   // https://gist.github.com/peterellisjones/8c46c28141c162d1d8a0f0badbc9cff9
 
 
-    private List<GameObject> clones = new List<GameObject>();
+  private List<GameObject> clones = new List<GameObject>();
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+  public void setBoardState()
+  {
+    while (clones.Count > 0)
     {
+
+      GameObject c = clones.ElementAt(0);
+      clones.RemoveAt(0);
+      if (c != null)
+      {
+        Destroy(c);
+      }
+      c = null;
+
     }
 
-  // Update is called once per frame
-  void Update() {}
-
-    public void setBoardState() {
-        
-        while (clones.Count > 0) {
-            
-            GameObject c = clones.ElementAt(0);
-            clones.RemoveAt(0);
-            if (c != null) {
-               Destroy(c);
-            }
-            c = null;
-            
-        }
-
-        int x = 0;
-        //string fen = fens[UnityEngine.Random.Range(0, fens.Count)];
-        string fen = RandomFENGenerator.GenerateRandomFEN();
-        foreach (char chr in fen) {
-            if (chr == '/') {continue;}
-            if (Char.IsDigit(chr))
-            {                
-                x += chr - 48;
-            }
-            else {
-                place(fenPieceMap[chr], x);
-                x += 1;  
-            }
-        }
+    int x = 0;
+    string fen = FENGenerator.GenerateRandomFEN();
+    foreach (char chr in fen)
+    {
+      if (chr == '/') { continue; }
+      if (Char.IsDigit(chr))
+      {
+        x += chr - 48;
+      }
+      else
+      {
+        place(fenPieceMap[chr], x);
+        x += 1;
+      }
     }
+  }
 
-    void place(string piece, int idx) {
-        float square_size = 0.6f;
-        float col_zero = (5.0f-0.8f)/2f; // The x position of a1
-        float row_zero = (4.98f-0.8f)/2f; // The y position of a1
-        
+  void place(string piece, int idx)
+  {
+    float square_size = 0.6f;
+    float col_zero = (5.0f - 0.8f) / 2f; // The x position of a1
+    float row_zero = (4.98f - 0.8f) / 2f; // The y position of a1
+
 
     float col = col_zero - idx % 8 * square_size;
     float row = row_zero - idx / 8 * square_size;
@@ -80,18 +77,16 @@ public class SetGameState : MonoBehaviour {
     Quaternion rotation = Quaternion.Euler(-90, 0, 0);
     GameObject prefab = Resources.Load<GameObject>("Prefabs/" + piece);
 
-    if (prefab == null) {
+    if (prefab == null)
+    {
       Debug.LogError("Could not find prefab at Resources/Prefabs/" + piece);
       return;
     }
 
-        GameObject clone = Instantiate(prefab, position, rotation);
-        clone.transform.localScale = new Vector3(1000, 1000, 1000);
+    GameObject clone = Instantiate(prefab, position, rotation);
+    clone.transform.localScale = new Vector3(1000, 1000, 1000);
 
-        clones.Add(clone);
-        
-        // Modify the clone to your heart's content
-    }
-
+    clones.Add(clone);
+  }
 
 }
