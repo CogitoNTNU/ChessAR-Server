@@ -22,7 +22,7 @@ public class SetRandomPosition : MonoBehaviour
 
     public Camera mainCamera;
     public GameObject chessboard;
-    public SetGameState setGameState;
+    public ChessStateGenerator setGameState;
 
     void Start()
     {
