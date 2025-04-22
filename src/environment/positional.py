@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Literal
 
 from src.environment.environment import Environment
 import numpy as np
@@ -29,7 +29,10 @@ class PositionalParams(BaseModel):
 
 
 class Positional(Environment):
+    type: Literal["positional_environment"] = "positional_environment"
+
     """Implements an environment that intakes positional arguments from an image, the corner positions and all the piece positions detected"""
+
     def to_env(self, repr_state: PositionalParams) -> Chessboard:
         """
         Transforms all piece positions from screen space to board space. Then snap them to the nearest square.
