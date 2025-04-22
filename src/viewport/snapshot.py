@@ -2,7 +2,7 @@ from typing import Literal
 from PIL import Image
 from src.viewport.viewport import ViewPort
 
-type ViewPortImage = Image.Image
+ViewPortImage = Image.Image
 
 PATH_IMAGES = "./misc/images/"
 
