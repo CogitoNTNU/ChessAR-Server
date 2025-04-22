@@ -1,13 +1,13 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(GenerateRandomData))]
+[CustomEditor(typeof(DataGenerator))]
 public class GenerateMultipleSnapshots : Editor
 {
   public override void OnInspectorGUI()
   {
     DrawDefaultInspector(); // Keep default fields visible
-    GenerateRandomData script = (GenerateRandomData)target;
+    DataGenerator script = (DataGenerator)target;
     if (GUILayout.Button("Take pictures with random position and camera"))
     {
       script.numPictures = 100;
