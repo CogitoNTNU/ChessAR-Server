@@ -5,9 +5,7 @@ import numpy as np
 from src.environment.fen import Fen
 
 from pydantic import BaseModel
-import chess
 
-# This is a type alias for a fen string
 fen = str
 Piece = str
 Chessboard = List[List[Piece]]
@@ -28,9 +26,6 @@ class PositionalParams(BaseModel):
     """The positional arguments for the environment"""
     corner_positions: List[Corners]
     piece_positions: List[PiecePositions]
-
-
-
 
 
 class Positional(Environment):
@@ -54,7 +49,7 @@ class Positional(Environment):
                 chessboard[row][col] = piece.piece
             else:
                 print(f"Error: pieces {piece.piece} and {chessboard[row][col]} are on the same square!")
-        
+
         return chessboard
 
     def find_transformation_matrix(self, corners: List[Corners]) -> np.ndarray:
@@ -63,7 +58,7 @@ class Positional(Environment):
         Args:
             corners (List[Corners]): List of corners of chess board in screen space
         Returns:
-            np.ndarray: 2D transformation matrix 
+            np.ndarray: 2D transformation matrix
         """
         start_point = corners[0]
         vecs = []
@@ -120,11 +115,10 @@ class Positional(Environment):
             transformation = self.transform_to_board_space_vector(t_matrix, vec)
             board_space = PiecePositions(x=transformation[0], y=transformation[1], piece=piece.piece, probability=piece.probability)
             board_space_piece_pos.append(board_space)
-        
+
         return board_space_piece_pos
-    
-    
-    
+
+
     def is_valid(self, state: Chessboard) -> bool:
         """
         Checks if the fens string is a valid chessboard state
@@ -137,7 +131,7 @@ class Positional(Environment):
         """
         env = Fen()
         return env.is_valid(self.to_fen(state))
-        
+
 
     def to_fen(self, state: Chessboard) -> fen:
         fen = ""
