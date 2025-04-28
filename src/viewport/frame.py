@@ -1,0 +1,73 @@
+import io
+from PIL import Image
+from frame_ble.frame_ble import asyncio
+from src.viewport.viewport import ViewPort
+from frame_msg import FrameMsg, RxPhoto, TxCaptureSettings
+
+ViewPortImage = Image.Image
+
+class Frame(ViewPort):
+    """
+    This class implements a frame viewport interface to be used as a base for all frame viewports.
+    """
+    def __init__(self) -> None:
+        """
+        Initializes the Frame glasses.
+        """
+        super().__init__()
+        self.frame = FrameMsg()
+
+    async def _init_frame(self) -> None:
+        try:
+            await self.frame.connect()
+            await self.frame.print_short_text("Loading...")
+            await self.frame.upload_stdlua_libs(lib_names=['data', 'camera'])
+            await self.frame.upload_frame_app(local_filename="lua/camera_frame.lua")
+            self.frame.attach_print_response_handler()
+
+            await self.frame.start_frame_app()
+
+            rx_photo = RxPhoto()
+            self.photo_queue = await rx_photo.attach(self.frame)
+            print("Letting autoexposure loop run for 5 seconds to settle")
+            await asyncio.sleep(5.0)
+            print("Taking snapshot")
+        except Exception as e:
+            print(f"Error initializing Frame: {e}")
+            await self.frame.disconnect()
+            return
+
+    async def get_output(self) -> ViewPortImage:
+        """
+        Returns the current state of the chess board as a stream or image.
+        """
+        await self._init_frame()
+
+        image = await self._take_snapshot()
+
+        if image is None:
+            raise ValueError("Frame couldn't take snapshot")
+
+        return image
+        # return Image.open(f"chessboard.jpg")
+
+    async def _take_snapshot(self) -> ViewPortImage | None:
+        """
+        Takes a snapshot of the camera feed.
+        """
+        if (self.frame is None):
+            raise ValueError("Frame is not connected")
+
+        try:
+            await self.frame.send_message(0x0d, TxCaptureSettings(resolution=720).pack())
+            jpeg_bytes = await asyncio.wait_for(self.photo_queue.get(), timeout=10.0)
+            image = Image.open(io.BytesIO(jpeg_bytes))
+
+            return image
+
+        except Exception as e:
+            print(f"Error taking snapshot: {e}")
+            return None
+        finally:
+            await self.frame.stop_frame_app()
+            return None
