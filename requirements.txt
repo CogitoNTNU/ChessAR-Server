@@ -4,7 +4,9 @@ charset-normalizer==3.4.1
 chess==1.11.2
 idna==3.10
 iniconfig==2.0.0
+numpy==2.2.5
 packaging==24.2
+pillow==11.2.1
 pluggy==1.5.0
 pydantic==2.11.1
 pydantic_core==2.33.0

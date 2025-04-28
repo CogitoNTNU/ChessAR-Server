@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RandomFENGenerator
+public class FENGenerator
 {
     private static readonly char[] Pieces = { 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r', 'b', 'n', 'p' };
     private static readonly System.Random Random = new System.Random();
@@ -16,7 +16,7 @@ public class RandomFENGenerator
         string enPassant = GenerateEnPassantTargetSquare(activeColor);
         int halfMoveClock = Random.Next(0, 50);
         int fullMoveNumber = Random.Next(1, 100);
-        
+
         // return $"{board} {activeColor} {castling} {enPassant} {halfMoveClock} {fullMoveNumber}";
         return $"{board}";
     }

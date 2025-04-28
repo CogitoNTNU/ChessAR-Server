@@ -119,6 +119,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &584018350
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 584018352}
+  - component: {fileID: 584018351}
+  m_Layer: 0
+  m_Name: LightingGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &584018351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584018350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78f0143227d3c418ead196e3cd6ac3d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  light: {fileID: 1494220581}
+--- !u!4 &584018352
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584018350}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.178994, y: -0.19999981, z: 0.7166195}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &651311992 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2199828438211058824, guid: ee467b311aac44b05a5f67c2583eabab, type: 3}
@@ -208,7 +253,7 @@ MonoBehaviour:
   m_InnerSpotPercent: 0
   m_SpotIESCutoffPercent: 100
   m_LightDimmer: 1
-  m_VolumetricDimmer: 1
+  m_VolumetricDimmer: 3.5
   m_FadeDistance: 10000
   m_VolumetricFadeDistance: 10000
   m_AffectDiffuse: 1
@@ -339,7 +384,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 100000
+  m_Intensity: 85915.49
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -380,7 +425,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 1
@@ -464,7 +509,7 @@ GameObject:
   - component: {fileID: 1649105047}
   - component: {fileID: 1649105048}
   m_Layer: 0
-  m_Name: SetCameraPosition
+  m_Name: SetRandomPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -494,10 +539,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1649105045}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e044811785b64eac9716b557d11d90f, type: 3}
+  m_Script: {fileID: 11500000, guid: c8ec4532a6f14498d819953d4bc4d934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upscale: 1
+  upscale: 2
   min_rho: 5
   max_rho: 7
   min_theta: -0.7853982
@@ -505,9 +550,9 @@ MonoBehaviour:
   min_phi: 0.5235988
   max_phi: 1.0471976
   max_rotation_offset: 1
-  screenshotFolderPath: Assets/Screenshots/
-  labelFolderPath: Assets/Labels/
-  mainCamera: {fileID: 1823688466}
+  screenshotFolderPath: ../Data/Screenshots/
+  labelFolderPath: ../Data/Labels/
+  mainCamera: {fileID: 0}
   chessboard: {fileID: 651311992}
   setGameState: {fileID: 672738974}
 --- !u!1 &1717317103
@@ -900,6 +945,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2025564712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2025564714}
+  - component: {fileID: 2025564713}
+  m_Layer: 0
+  m_Name: Run
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2025564713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025564712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b70b1057bb554504ade6a53235abb40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numPictures: 100
+  currPicture: 0
+  sleep: 200
+  interval: 0
+  pos: {fileID: 1649105048}
+  lightingGenerator: {fileID: 584018351}
+--- !u!4 &2025564714
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025564712}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.178994, y: -0.19999981, z: 0.7166195}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2751002752091723061
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -914,6 +1009,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 442740289912222305, guid: ee467b311aac44b05a5f67c2583eabab, type: 3}
       propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1681478841875401244, guid: ee467b311aac44b05a5f67c2583eabab, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3759809596405545211, guid: ee467b311aac44b05a5f67c2583eabab, type: 3}
@@ -972,6 +1071,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chess Set
       objectReference: {fileID: 0}
+    - target: {fileID: 5331952114435597595, guid: ee467b311aac44b05a5f67c2583eabab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -989,3 +1092,5 @@ SceneRoots:
   - {fileID: 1717317107}
   - {fileID: 1649105047}
   - {fileID: 672738975}
+  - {fileID: 2025564714}
+  - {fileID: 584018352}

@@ -4,9 +4,7 @@ import chess
 
 from src.environment.environment import Environment
 
-# This is a type alias for a fen string
 fen = str
-
 
 class Fen(Environment):
     """Implements an environment that intakes fen strings, and validates them as real chessboards

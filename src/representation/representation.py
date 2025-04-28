@@ -1,11 +1,12 @@
-from typing import Any, Protocol
+from abc import ABC, abstractmethod
+from typing import Any
 
 """
 This module implements the representation layer of the overall architecture.
 """
 
 
-class Representation(Protocol):
+class Representation(ABC):
     """
     This interface defines how all representation layer should work.
 
@@ -21,7 +22,8 @@ class Representation(Protocol):
     You are free to implement any missing methods you see fit.
     """
 
-    def compute(self, input) -> Any:
+    @abstractmethod
+    def compute(self, input: Any) -> Any:
         """
         Takes the input from the viewport and returns the state of the chess board.
 

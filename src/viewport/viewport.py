@@ -1,11 +1,11 @@
-from typing import Protocol
+from abc import ABC, abstractmethod
+from typing import Any
 
 """
 This implements a standard viewport interface to be used as a base for all viewports.
 """
 
-
-class ViewPort(Protocol):
+class ViewPort(ABC):
     """
     This interface defines how all viewport layer should work.
 
@@ -17,7 +17,8 @@ class ViewPort(Protocol):
 
     """
 
-    def get_output(self) -> object:
+    @abstractmethod
+    def get_output(self) -> Any:
         """
         Returns the current state of the chess board as a stream or image.
         """
