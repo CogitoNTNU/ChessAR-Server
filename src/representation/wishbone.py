@@ -16,11 +16,25 @@ class WishBone(Representation):
     def YOLO_detect_corners(self, input: ViewPortImage) -> List[Corners]:
         """YOLOV# model to detect corners of the chessboard"""
         pass
-
-
+      
     def YOLO_detect_pieces(self, input: ViewPortImage) -> List[PiecePositions]:
         """YOLOV# model to detect pieces and their positions"""
-        pass
+
+        CLIENT = InferenceHTTPClient(
+            api_url="https://detect.roboflow.com",
+            api_key="KWXDph0Kgrmgyro7XGtS"
+        )
+
+        board = CLIENT.infer(input, model_id="chess-piece-detection-5ipnt/3")
+        
+        pieces: List[PiecePositions] = []
+
+        for temp_piece in board['predictions']:
+            piece = PiecePositions(x=temp_piece['x'], y=temp_piece['y'], piece=temp_piece['class'], probability=temp_piece['confidence'])
+            pieces.append(piece)
+
+       
+        return pieces
 
     def compute(self, input: Image.Image) -> Chessboard:
         """
