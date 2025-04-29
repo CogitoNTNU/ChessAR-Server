@@ -37,6 +37,12 @@ class Frame(ViewPort):
             await self.frame.disconnect()
             return
 
+    async def write_to_frame(self, text: str) -> None:
+        """
+        Writes a message to the frame.
+        """
+        await self.frame.print_short_text(text)
+
     async def get_output(self) -> ViewPortImage:
         """
         Returns the current state of the chess board as a stream or image.
