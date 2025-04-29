@@ -27,6 +27,28 @@ class PositionalParams(BaseModel):
     corner_positions: List[Corners]
     piece_positions: List[PiecePositions]
 
+def piece_to_fen(piece: str) -> str:
+    """
+    Map a piece string to the correct FEN letter.
+    Assumes format like 'white-pawn', 'black-knight', etc.
+    """
+    mapping = {
+        "pawn": "p",
+        "knight": "n",
+        "bishop": "b",
+        "rook": "k",
+        "queen": "q",
+        "king": "k"
+    }
+
+    try:
+        color, kind = piece.lower().split("-")
+        if kind not in mapping:
+            raise ValueError(f"Unknown piece kind: {kind}")
+        symbol = mapping[kind]
+        return symbol.upper() if color == "white" else symbol
+    except Exception as e:
+        raise ValueError(f"Invalid piece format '{piece}': {e}")
 
 class Positional(Environment):
     type: Literal["positional_environment"] = "positional_environment"
@@ -145,7 +167,7 @@ class Positional(Environment):
                     if num > 0:
                         fen += str(num)
                         num = 0
-                    fen += state[i][j]
+                    fen += piece_to_fen(state[i][j])
                 else:
                     num += 1
             if num > 0:
@@ -153,5 +175,5 @@ class Positional(Environment):
                 num = 0
             if i < len(state)-1:
                 fen += "/"
-        fen += " w - - 0 0"
+        fen += " w - - 1 2"
         return fen

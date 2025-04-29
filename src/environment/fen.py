@@ -28,8 +28,10 @@ class Fen(Environment):
         if len(repr_state.split()) != 6:
             return False
         try:
+            print(chess.Board().set_fen(repr_state))
             return chess.Board().set_fen(repr_state)
         except:
+            print(repr_state)
             print("Invalid FEN string")
             return False
 

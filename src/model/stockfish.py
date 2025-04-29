@@ -14,4 +14,10 @@ class Stockfish(Model):
     def get_best_move(self, state: str) -> List[str]:
         headers = {"fen": state, "depth": self.depth}
         ans = requests.post(self.url, json=headers)
-        return ans.json()["move"]
+        print(ans.json())
+        try:
+            return ans.json()["move"]
+        except:
+            print(f"Could not evaluate position {state}!")
+
+            

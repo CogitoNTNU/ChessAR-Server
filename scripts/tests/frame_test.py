@@ -3,7 +3,7 @@ from PIL import Image
 import io
 
 from frame_msg import FrameMsg, RxPhoto, TxCaptureSettings
-
+import time
 async def main():
     """
     Take a photo using the Frame camera and display it in the system viewer
@@ -51,7 +51,7 @@ async def main():
         print("Capturing a photo")
 
         # Request the photo by sending a TxCaptureSettings message
-        for _ in range(5):
+        for _ in range(1000):
             await frame.send_message(0x0d, TxCaptureSettings(resolution=680).pack())
 
             # get the jpeg bytes as soon as they're ready
@@ -59,7 +59,8 @@ async def main():
 
             # display the image in the system viewer
             image = Image.open(io.BytesIO(jpeg_bytes))
-            image.show()
+            image.save(f"misc/images/frame_image_{time.time()}.png")
+            
 
             await asyncio.sleep(1.0)
 

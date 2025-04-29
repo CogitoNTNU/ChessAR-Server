@@ -25,6 +25,29 @@ class PositionalParams(BaseModel):
     corner_positions: List[Corners]
     piece_positions: List[PiecePositions]
 
+def piece_to_fen(piece: str) -> str:
+    """
+    Map a piece string to the correct FEN letter.
+    Assumes format like 'white-pawn', 'black-knight', etc.
+    """
+    mapping = {
+        "pawn": "p",
+        "knight": "n",
+        "bishop": "b",
+        "rook": "r",
+        "queen": "q",
+        "king": "k"
+    }
+
+    try:
+        color, kind = piece.lower().split("-")
+        if kind not in mapping:
+            raise ValueError(f"Unknown piece kind: {kind}")
+        symbol = mapping[kind]
+        return symbol.upper() if color == "white" else symbol
+    except Exception as e:
+        raise ValueError(f"Invalid piece format '{piece}': {e}")
+
 
 def order_corners(corners: List[Corners]) -> np.ndarray:
     """
@@ -77,7 +100,7 @@ class Positional(Environment):
             row = int(y_w // square)
             col = max(0, min(7, col))
             row = max(0, min(7, row))
-            board[row][col] = p.piece
+            board[row][col] = piece_to_fen(p.piece)
         return board
 
     def to_fen(self, state: Chessboard) -> fen:
@@ -91,7 +114,7 @@ class Positional(Environment):
                     if empty:
                         fen_str += str(empty)
                         empty = 0
-                    fen_str += cell
+                    fen_str += piece_to_fen(cell)
             if empty:
                 fen_str += str(empty)
             if i < len(state) - 1:
