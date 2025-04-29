@@ -2,10 +2,14 @@
 This is the main file for the project. Everything starts here...
 """
 
+from asyncio import sleep
 from dataclasses import dataclass
+
+from frame_ble.frame_ble import asyncio
 from src.environment.environment import Environment
 from src.environment.positional import Chessboard, Positional
 from src.model.model import Model
+from src.viewport.frame import Frame
 from src.viewport.viewport import ViewPort
 from src.model.stockfish import Stockfish
 from src.representation.representation import Representation
@@ -22,7 +26,7 @@ class Configuration:
 def setup() -> Configuration:
     """Setup the environment, representation and model"""
 
-    viewport: ViewPort = SnapShot()
+    viewport: ViewPort = Frame()
     environment: Environment = Positional()
     repr: Representation = WishBone(environment)
     model: Model = Stockfish()
@@ -31,19 +35,20 @@ def setup() -> Configuration:
 
 def main() -> None:
     callbacks = setup()
-    image: ViewPortImage = callbacks.viewport.get_output()
-    chessboard: Chessboard = callbacks.representation.compute(image)
+    image = asyncio.run(callbacks.viewport.get_output())
+    image.show()
+    # chessboard: Chessboard = callbacks.representation.compute(image)
 
-    if not callbacks.environment.is_valid(chessboard):
-        raise ValueError("Invalid chessboard state")
+    # if not callbacks.environment.is_valid(chessboard):
+    #     raise ValueError("Invalid chessboard state")
 
-    fen: str = callbacks.environment.to_fen(chessboard)
-
-    print(f"FEN: {fen} \n")
-
-    best_move = callbacks.model.get_best_move(fen)
-
-    print(f"Best move: {best_move} \n")
+    # fen: str = callbacks.environment.to_fen(chessboard)
+    #
+    # print(f"FEN: {fen} \n")
+    #
+    # best_move = callbacks.model.get_best_move(fen)
+    #
+    # print(f"Best move: {best_move} \n")
 
 
 if __name__ == "__main__":
