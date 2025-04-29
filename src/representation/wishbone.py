@@ -1,4 +1,4 @@
-from src.environment.positional import Chessboard, Corners, PiecePositions, Positional, PositionalParams
+from src.environment.positional2 import Chessboard, Corners, PiecePositions, Positional, PositionalParams
 from src.representation.representation import Representation
 from typing import List, Literal
 from PIL import Image

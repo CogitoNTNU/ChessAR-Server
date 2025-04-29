@@ -1,4 +1,3 @@
-# src/environment/positional_env.py
 from typing import List, Tuple, Literal
 import numpy as np
 import cv2
@@ -29,7 +28,7 @@ class PositionalParams(BaseModel):
 
 def order_corners(corners: List[Corners]) -> np.ndarray:
     """
-    Order four detected corners consistently as topleftl, topright, bottomright, bottomleft
+    Order four detected corners consistently as topleft, topright, bottomright, bottomleft
     """
     pts = np.array([[c.x, c.y] for c in corners], dtype="float32")
     # sort by y-coordinate
