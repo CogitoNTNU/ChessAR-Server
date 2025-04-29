@@ -1,6 +1,8 @@
+from ultralytics import YOLO
 from src.environment.positional2 import Chessboard, Corners, PiecePositions, Positional, PositionalParams
 from src.representation.representation import Representation
 from typing import List, Literal
+from inference_sdk import InferenceHTTPClient
 from PIL import Image
 from src.viewport.snapshot import ViewPortImage
 
@@ -15,7 +17,17 @@ class WishBone(Representation):
 
     def YOLO_detect_corners(self, input: ViewPortImage) -> List[Corners]:
         """YOLOV# model to detect corners of the chessboard"""
-        pass
+
+        model = YOLO("./corner_weights.pt")  # Load the model
+        results = model.predict(input)
+
+        corners = []
+
+        for result in results[0].boxes.data.tolist():
+            x, y, width, height, conf, cls = result
+            corners.append(Corners(x=x, y=y, width=width, height=height))
+
+        return corners
       
     def YOLO_detect_pieces(self, input: ViewPortImage) -> List[PiecePositions]:
         """YOLOV# model to detect pieces and their positions"""
