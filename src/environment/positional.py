@@ -67,14 +67,20 @@ class Positional(Environment):
         """
         chessboard = [["" for _ in range(8)] for __ in range(8)]
         pieces = self.get_piece_positions_in_board_space(repr_state)
+        if pieces is None:
+            return None
+        
         for piece in pieces:
             row = int(piece.x * 8)
             col = int(piece.y * 8)
-            if chessboard[row][col] == "":
-                chessboard[row][col] = piece.piece
-            else:
-                print(f"Error: pieces {piece.piece} and {chessboard[row][col]} are on the same square!")
-
+            try:
+                if chessboard[row][col] == "":
+                    chessboard[row][col] = piece.piece
+                else:
+                    print(f"Error: pieces {piece.piece} and {chessboard[row][col]} are on the same square!")
+            except:
+                print("Pieces not placed correctly")
+                return None
         return chessboard
 
     def find_transformation_matrix(self, corners: List[Corners]) -> np.ndarray:
@@ -85,11 +91,16 @@ class Positional(Environment):
         Returns:
             np.ndarray: 2D transformation matrix
         """
-        start_point = corners[0]
-        vecs = []
-        for point in corners:
-            if point == start_point: continue
-            vecs.append(np.array([point.x-start_point.x, point.y-start_point.y]))
+        try:
+            start_point = corners[0]
+            vecs = []
+            for point in corners:
+                if point == start_point: continue
+                vecs.append(np.array([point.x-start_point.x, point.y-start_point.y]))
+        except:
+            print(f"Could not find corners.")
+            return None
+
 
         lowest_dot = 100000
         index_ldot = []
@@ -132,6 +143,8 @@ class Positional(Environment):
         pieces = board.piece_positions
 
         t_matrix = self.find_transformation_matrix(corners)
+        if t_matrix is None:
+            return None
 
         board_space_piece_pos = []
 
