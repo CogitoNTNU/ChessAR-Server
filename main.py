@@ -14,7 +14,6 @@ from src.viewport.viewport import ViewPort
 from src.model.stockfish import Stockfish
 from src.representation.representation import Representation
 from src.representation.wishbone import WishBone
-from src.app import App
 
 
 
@@ -24,7 +23,6 @@ class Configuration:
     environment: Environment
     representation: Representation
     model: Model
-    app: App
 
 
 def setup() -> Configuration:
@@ -33,12 +31,10 @@ def setup() -> Configuration:
     environment: Environment = Positional()
     repr: Representation = WishBone(environment)
     model: Model = Stockfish()
-    app: App = App()
-    return Configuration(viewport=viewport, environment=environment, representation=repr, model=model, app=app)
+    return Configuration(viewport=viewport, environment=environment, representation=repr, model=model)
 
 
 async def main(callbacks: Configuration) -> None:
-    # callbacks.app.run()
 
     await callbacks.viewport.init_frame()
 
