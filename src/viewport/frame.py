@@ -3,7 +3,6 @@ from PIL import Image
 from frame_ble.frame_ble import asyncio
 from src.viewport.viewport import ViewPort
 from frame_msg import FrameMsg, RxPhoto, TxCaptureSettings
-from frame_ble import FrameBle
 import time
 
 ViewPortImage = Image.Image
@@ -18,14 +17,12 @@ class Frame(ViewPort):
         """
         super().__init__()
         self.frame = FrameMsg()
-        self.initialized = False
-        
+        asyncio.run(self._init_frame())
 
 
     async def _init_frame(self) -> None:
         try:
-            if not self.initialized:
-                await self.frame.connect()
+            await self.frame.connect()
             await self.frame.print_short_text("Loading...")
             await self.frame.upload_stdlua_libs(lib_names=['data', 'camera'])
             await self.frame.upload_frame_app(local_filename="lua/camera_frame.lua")
@@ -55,14 +52,13 @@ class Frame(ViewPort):
         Returns the current state of the chess board as a stream or image.
     """
         await self._init_frame()
-    
+
         image = await self._take_snapshot()
 
         if image is None:
             raise ValueError("Frame couldn't take snapshot")
 
         return image
-        # return Image.open(f"chessboard.jpg")
 
     async def _take_snapshot(self) -> ViewPortImage | None:
         """
@@ -82,5 +78,3 @@ class Frame(ViewPort):
         except Exception as e:
             print(f"Error taking snapshot: {e}")
             return None
-        finally:
-            await self.frame.stop_frame_app()
