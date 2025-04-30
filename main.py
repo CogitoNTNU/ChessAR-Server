@@ -14,15 +14,17 @@ from src.viewport.viewport import ViewPort
 from src.model.stockfish import Stockfish
 from src.representation.representation import Representation
 from src.representation.wishbone import WishBone
+from src.app import App
 
 
 
 @dataclass
 class Configuration:
-    viewport: ViewPort
+    viewport: Frame
     environment: Environment
     representation: Representation
     model: Model
+    app: App
 
 
 def setup() -> Configuration:
@@ -31,22 +33,25 @@ def setup() -> Configuration:
     environment: Environment = Positional()
     repr: Representation = WishBone(environment)
     model: Model = Stockfish()
-    return Configuration(viewport=viewport, environment=environment, representation=repr, model=model)
+    app: App = App()
+    return Configuration(viewport=viewport, environment=environment, representation=repr, model=model, app=app)
 
 
-async def main() -> None:
-    callbacks = setup()
-    
-    for i in range(1):
+async def main(callbacks: Configuration) -> None:
+    # callbacks.app.run()
+
+    await callbacks.viewport.init_frame()
+
+    for i in range(10):
         print(f"Loop {i}")
         try:
             image = await callbacks.viewport.get_output()
             image.show()
 
             chessboard: Chessboard = callbacks.representation.compute(image)
+
             if chessboard is None:
                 await callbacks.viewport.write_to_frame("Picture was bad.")
-                await sleep(1.0)
                 await callbacks.viewport.write_to_frame("Taking new picture.")
                 continue
 
@@ -67,15 +72,14 @@ async def main() -> None:
         except Exception as e:
             print(f"Loop {i}: Caught exception: {e}")
             await callbacks.viewport.write_to_frame("Error occurred.")
-        
-        await sleep(2.0)
-        await callbacks.viewport.write_to_frame("Taking new picture.")
-    else:
-        await callbacks.viewport.write_to_frame("Finished.")
-        await callbacks.viewport.frame.disconnect()
 
-
+    #     await sleep(2.0)
+    #     await callbacks.viewport.write_to_frame("Taking new picture.")
+    # else:
+    #     await callbacks.viewport.write_to_frame("Finished.")
+    #     await callbacks.viewport.frame.disconnect()
 
 
 if __name__ == "__main__":
-    run(main())
+    callbacks = setup()
+    run(main(callbacks))

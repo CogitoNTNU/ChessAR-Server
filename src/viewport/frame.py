@@ -17,10 +17,9 @@ class Frame(ViewPort):
         """
         super().__init__()
         self.frame = FrameMsg()
-        asyncio.run(self._init_frame())
 
 
-    async def _init_frame(self) -> None:
+    async def init_frame(self) -> None:
         try:
             await self.frame.connect()
             await self.frame.print_short_text("Loading...")
@@ -33,7 +32,7 @@ class Frame(ViewPort):
             rx_photo = RxPhoto()
             self.photo_queue = await rx_photo.attach(self.frame)
             print("Letting autoexposure loop run for 5 seconds to settle")
-            await asyncio.sleep(5.0)
+            # await asyncio.sleep(5.0)
             print("Taking snapshot")
             self.initialized = True
         except Exception as e:
@@ -51,7 +50,7 @@ class Frame(ViewPort):
         """
         Returns the current state of the chess board as a stream or image.
     """
-        await self._init_frame()
+        # await self._init_frame()
 
         image = await self._take_snapshot()
 
