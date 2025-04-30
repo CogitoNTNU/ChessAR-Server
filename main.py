@@ -37,8 +37,8 @@ def setup() -> Configuration:
 async def main(callbacks: Configuration) -> None:
 
     await callbacks.viewport.init_frame()
-
-    for i in range(10):
+    iterations = 2
+    for i in range(iterations):
         print(f"Loop {i}")
         try:
             image = await callbacks.viewport.get_output()
@@ -48,7 +48,9 @@ async def main(callbacks: Configuration) -> None:
 
             if chessboard is None:
                 await callbacks.viewport.write_to_frame("Picture was bad.")
+                await sleep(2.0)
                 await callbacks.viewport.write_to_frame("Taking new picture.")
+                await sleep(1.0)
                 continue
 
             if not callbacks.environment.is_valid(chessboard):
@@ -62,6 +64,7 @@ async def main(callbacks: Configuration) -> None:
 
             if best_move is None:
                 await callbacks.viewport.write_to_frame("Invalid FEN string.")
+                pass
             else:
                 await callbacks.viewport.write_to_frame(best_move)
 
@@ -69,11 +72,13 @@ async def main(callbacks: Configuration) -> None:
             print(f"Loop {i}: Caught exception: {e}")
             await callbacks.viewport.write_to_frame("Error occurred.")
 
-    #     await sleep(2.0)
-    #     await callbacks.viewport.write_to_frame("Taking new picture.")
-    # else:
-    #     await callbacks.viewport.write_to_frame("Finished.")
-    #     await callbacks.viewport.frame.disconnect()
+        await sleep(3.0)
+        if i != iterations-1:
+            await callbacks.viewport.write_to_frame("Taking new picture.")
+            await sleep(2.0)
+    else:
+        await callbacks.viewport.write_to_frame("Finished.")
+        await callbacks.viewport.frame.disconnect()
 
 
 if __name__ == "__main__":

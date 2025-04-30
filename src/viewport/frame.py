@@ -27,12 +27,12 @@ class Frame(ViewPort):
             await self.frame.upload_frame_app(local_filename="lua/camera_frame.lua")
             self.frame.attach_print_response_handler()
 
-            await self.frame.start_frame_app()
+            #await self.frame.start_frame_app()
 
             rx_photo = RxPhoto()
             self.photo_queue = await rx_photo.attach(self.frame)
             print("Letting autoexposure loop run for 5 seconds to settle")
-            # await asyncio.sleep(5.0)
+            await asyncio.sleep(5.0)
             print("Taking snapshot")
             self.initialized = True
         except Exception as e:
@@ -67,6 +67,7 @@ class Frame(ViewPort):
             raise ValueError("Frame is not connected")
 
         try:
+            await self.frame.start_frame_app()
             await self.frame.send_message(0x0d, TxCaptureSettings(resolution=720).pack())
             jpeg_bytes = await asyncio.wait_for(self.photo_queue.get(), timeout=10.0)
             image = Image.open(io.BytesIO(jpeg_bytes))
@@ -77,3 +78,7 @@ class Frame(ViewPort):
         except Exception as e:
             print(f"Error taking snapshot: {e}")
             return None
+        finally:
+            await self.frame.stop_frame_app()
+            await self.write_to_frame(" ")
+            
