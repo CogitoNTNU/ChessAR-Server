@@ -18,10 +18,14 @@ class Frame(ViewPort):
         """
         super().__init__()
         self.frame = FrameMsg()
+        self.initialized = False
+        
+
 
     async def _init_frame(self) -> None:
         try:
-            await self.frame.connect()
+            if not self.initialized:
+                await self.frame.connect()
             await self.frame.print_short_text("Loading...")
             await self.frame.upload_stdlua_libs(lib_names=['data', 'camera'])
             await self.frame.upload_frame_app(local_filename="lua/camera_frame.lua")
@@ -34,10 +38,11 @@ class Frame(ViewPort):
             print("Letting autoexposure loop run for 5 seconds to settle")
             await asyncio.sleep(5.0)
             print("Taking snapshot")
+            self.initialized = True
         except Exception as e:
             print(f"Error initializing Frame: {e}")
             await self.frame.disconnect()
-            return
+            raise e
 
     async def write_to_frame(self, text: str) -> None:
         """
@@ -48,15 +53,13 @@ class Frame(ViewPort):
     async def get_output(self) -> ViewPortImage:
         """
         Returns the current state of the chess board as a stream or image.
-        """
-        for i in range(100):
-            await self._init_frame()
-        
-            image = await self._take_snapshot()
+    """
+        await self._init_frame()
+    
+        image = await self._take_snapshot()
 
-            if image is None:
-                raise ValueError("Frame couldn't take snapshot")
-            time.sleep(1)
+        if image is None:
+            raise ValueError("Frame couldn't take snapshot")
 
         return image
         # return Image.open(f"chessboard.jpg")

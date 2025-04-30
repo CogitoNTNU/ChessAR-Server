@@ -2,10 +2,10 @@
 This is the main file for the project. Everything starts here...
 """
 
-from asyncio import sleep
 from dataclasses import dataclass
+from asyncio import run, sleep
 
-from frame_ble.frame_ble import asyncio
+
 from src.environment.environment import Environment
 from src.environment.positional import Chessboard, Positional
 from src.model.model import Model
@@ -14,10 +14,8 @@ from src.viewport.viewport import ViewPort
 from src.model.stockfish import Stockfish
 from src.representation.representation import Representation
 from src.representation.wishbone import WishBone
-from src.viewport.snapshot import SnapShot, ViewPortImage
-from src.viewport.write_to_glasses import FrameController
 
-from time import sleep
+
 
 @dataclass
 class Configuration:
@@ -26,37 +24,58 @@ class Configuration:
     representation: Representation
     model: Model
 
+
 def setup() -> Configuration:
     """Setup the environment, representation and model"""
-
     viewport: ViewPort = Frame()
     environment: Environment = Positional()
     repr: Representation = WishBone(environment)
     model: Model = Stockfish()
-
     return Configuration(viewport=viewport, environment=environment, representation=repr, model=model)
 
-def main() -> None:
+
+async def main() -> None:
     callbacks = setup()
-    image = asyncio.run(callbacks.viewport.get_output())
-    image.show()
-
-    chessboard: Chessboard = callbacks.representation.compute(image)
     
-    if not callbacks.environment.is_valid(chessboard):
-        raise ValueError("Invalid chessboard state")
+    for i in range(1):
+        print(f"Loop {i}")
+        try:
+            image = await callbacks.viewport.get_output()
+            image.show()
 
-    fen: str = callbacks.environment.to_fen(chessboard)
-    
-    print(f"FEN: {fen} \n")
-    
-    best_move = callbacks.model.get_best_move(fen)
+            chessboard: Chessboard = callbacks.representation.compute(image)
+            if chessboard is None:
+                await callbacks.viewport.write_to_frame("Picture was bad.")
+                await sleep(1.0)
+                await callbacks.viewport.write_to_frame("Taking new picture.")
+                continue
 
-    print(f"Best move: {best_move} \n")
-    # asyncio.run(callbacks.viewport.send_bestmove(best_move))
+            if not callbacks.environment.is_valid(chessboard):
+                raise ValueError("Invalid chessboard state")
 
-    
+            fen: str = callbacks.environment.to_fen(chessboard)
+            print(f"FEN: {fen} \n")
+
+            best_move = callbacks.model.get_best_move(fen)
+            print(f"Best move: {best_move} \n")
+
+            if best_move is None:
+                await callbacks.viewport.write_to_frame("Invalid FEN string.")
+            else:
+                await callbacks.viewport.write_to_frame(best_move)
+
+        except Exception as e:
+            print(f"Loop {i}: Caught exception: {e}")
+            await callbacks.viewport.write_to_frame("Error occurred.")
+        
+        await sleep(2.0)
+        await callbacks.viewport.write_to_frame("Taking new picture.")
+    else:
+        await callbacks.viewport.write_to_frame("Finished.")
+        await callbacks.viewport.frame.disconnect()
+
+
 
 
 if __name__ == "__main__":
-    main()
+    run(main())

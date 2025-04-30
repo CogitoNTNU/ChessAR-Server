@@ -54,6 +54,7 @@ class WishBone(Representation):
 
         input - the stream or image input from the viewport.
         """
+
         bord_corners: List[Corners] = self.YOLO_detect_corners(input) # Get the corners of the chessboard
 
         pieces: List[PiecePositions] = self.YOLO_detect_pieces(input) # Get the pieces from the image
@@ -61,5 +62,7 @@ class WishBone(Representation):
         positional_params = PositionalParams(corner_positions=bord_corners, piece_positions=pieces)
 
         chessboard = self.environment.to_env(positional_params)
+        if chessboard is None:
+            return None
 
         return chessboard
